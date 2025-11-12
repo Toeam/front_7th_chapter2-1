@@ -1,11 +1,11 @@
 import { PageLayout } from "./PageLayout";
 import { SearchForm, ProductList } from "../components/index.js";
 
-export const Homepage = ({ filters, products, pagination, loading }) => {
+export const Homepage = ({ filters, products, pagination, loading, categories }) => {
   return PageLayout({
     children: `
-  ${SearchForm({ filters, pagination })}
-  ${ProductList({ loading, products })}
+  ${SearchForm({ filters, pagination, loading, categories })}
+  ${ProductList({ loading, products, pagination })}
   `,
   });
 };
