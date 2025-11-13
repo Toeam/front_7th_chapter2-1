@@ -1,15 +1,56 @@
-import { PageLayout } from "./PageLayout.js";
+import { HeaderCart } from "../components/HeaderCart.js";
+import { Footer } from "../components/index.js";
 
-export const DetailPage = ({ loading, product }) => {
-  return PageLayout({
-    children: loading
-      ? `<div class="py-20 bg-gray-50 flex items-center justify-center">
+const renderRelatedProducts = (product, relatedProducts) => {
+  if (!relatedProducts || relatedProducts.length === 0) {
+    return '<p class="text-sm text-gray-600">관련 상품이 없습니다.</p>';
+  }
+
+  return relatedProducts
+    .filter((item) => item.productId !== product.productId)
+    .map(
+      (item) => `  
+  <div class="bg-gray-50 rounded-lg p-3 related-product-card cursor-pointer" data-product-id="${item.productId}">
+                  <div class="aspect-square bg-white rounded-md overflow-hidden mb-2">
+                    <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover" loading="lazy">
+                  </div>
+                  <h3 class="text-sm font-medium text-gray-900 mb-1 line-clamp-2">${item.title}</h3>
+                  <p class="text-sm font-bold text-blue-600">${item.lprice}원</p>
+                </div>
+  `,
+    )
+    .join("");
+};
+
+export const DetailPage = ({ loading, product, relatedProducts = [] }) => {
+  return `
+    <div class="min-h-screen bg-gray-50">
+      <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-md mx-auto px-4 py-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <button onclick="window.history.back()" class="p-2 text-gray-700 hover:text-gray-900 transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+              </button>
+              <h1 class="text-lg font-bold text-gray-900">상품 상세</h1>
+            </div>
+            <div class="flex items-center space-x-2">
+              ${HeaderCart()}
+            </div>
+          </div>
+        </div>
+      </header>
+      ${
+        loading
+          ? `<div class="py-20 bg-gray-50 flex items-center justify-center">
             <div class="text-center">
               <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
               <p class="text-gray-600">상품 정보를 불러오는 중...</p>
             </div>
           </div>`
-      : `
+          : `
           <main class="max-w-md mx-auto px-4 py-4">
           <!-- 브레드크럼 -->
           <nav class="mb-4">
@@ -18,13 +59,13 @@ export const DetailPage = ({ loading, product }) => {
               <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
               </svg>
-              <button class="breadcrumb-link" data-category1="생활/건강">
+              <button class="breadcrumb-link" data-category1="${product.category1}">
                 ${product.category1}
               </button>
               <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
               </svg>
-              <button class="breadcrumb-link" data-category2="생활용품">
+              <button class="breadcrumb-link" data-category1="${product.category1}" data-category2="${product.category2}">
                 ${product.category2}
               </button>
             </div>
@@ -97,7 +138,7 @@ export const DetailPage = ({ loading, product }) => {
                 </div>
               </div>
               <!-- 액션 버튼 -->
-              <button id="add-to-cart-btn" data-product-id="85067212996" class="w-full bg-blue-600 text-white py-3 px-4 rounded-md 
+              <button id="add-to-cart-btn" data-product-id="${product.productId}" class="w-full bg-blue-600 text-white py-3 px-4 rounded-md 
                    hover:bg-blue-700 transition-colors font-medium">
                 장바구니 담기
               </button>
@@ -118,24 +159,14 @@ export const DetailPage = ({ loading, product }) => {
             </div>
             <div class="p-4">
               <div class="grid grid-cols-2 gap-3 responsive-grid">
-                <div class="bg-gray-50 rounded-lg p-3 related-product-card cursor-pointer" data-product-id="86940857379">
-                  <div class="aspect-square bg-white rounded-md overflow-hidden mb-2">
-                    <img src="https://shopping-phinf.pstatic.net/main_8694085/86940857379.1.jpg" alt="샷시 풍지판 창문 바람막이 베란다 문 틈막이 창틀 벌레 차단 샤시 방충망 틈새막이" class="w-full h-full object-cover" loading="lazy">
-                  </div>
-                  <h3 class="text-sm font-medium text-gray-900 mb-1 line-clamp-2">샷시 풍지판 창문 바람막이 베란다 문 틈막이 창틀 벌레 차단 샤시 방충망 틈새막이</h3>
-                  <p class="text-sm font-bold text-blue-600">230원</p>
-                </div>
-                <div class="bg-gray-50 rounded-lg p-3 related-product-card cursor-pointer" data-product-id="82094468339">
-                  <div class="aspect-square bg-white rounded-md overflow-hidden mb-2">
-                    <img src="https://shopping-phinf.pstatic.net/main_8209446/82094468339.4.jpg" alt="실리카겔 50g 습기제거제 제품 /산업 신발 의류 방습제" class="w-full h-full object-cover" loading="lazy">
-                  </div>
-                  <h3 class="text-sm font-medium text-gray-900 mb-1 line-clamp-2">실리카겔 50g 습기제거제 제품 /산업 신발 의류 방습제</h3>
-                  <p class="text-sm font-bold text-blue-600">280원</p>
-                </div>
+                ${renderRelatedProducts(product, relatedProducts)}
               </div>
             </div>
           </div>
         </main>
-          `,
-  });
+        `
+      }
+      ${Footer()}
+    </div>
+  `;
 };

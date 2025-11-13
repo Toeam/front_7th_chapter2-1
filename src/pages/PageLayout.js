@@ -1,5 +1,4 @@
 import { Header, Footer } from "../components";
-
 export const PageLayout = ({ children }) => {
   return `
   <div class="min-h-screen bg-gray-50">
@@ -8,6 +7,7 @@ export const PageLayout = ({ children }) => {
                 ${children}
             </main>
     ${Footer()}
+    
     </div>
 `;
 };
